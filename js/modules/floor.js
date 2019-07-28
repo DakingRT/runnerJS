@@ -50,7 +50,7 @@ export default class floor {
             this.dimensions.WIDTH,
             this.dimensions.HEIGHT,
             0,
-            120,
+            120, 
             this.dimensions.WIDTH,
             this.dimensions.HEIGHT
         );

@@ -4,5 +4,5 @@
 # install dependencies
 npm install
 
-# serve at http://127.0.0.1:8000
+# serve at http://127.0.0.1:8000 (localhost)
 ws

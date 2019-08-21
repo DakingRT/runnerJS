@@ -42,7 +42,7 @@ export default class floor {
     }
 
     draw() {
-        console.log("entradRAW");
+        //console.log("entradRAW");
         this.canvasCtx.drawImage(
             getImageSprite(),
             this.spritePos.x,
@@ -50,7 +50,7 @@ export default class floor {
             this.dimensions.WIDTH,
             this.dimensions.HEIGHT,
             0,
-            120, 
+            120,
             this.dimensions.WIDTH,
             this.dimensions.HEIGHT
         );

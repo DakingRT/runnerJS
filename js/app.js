@@ -4,7 +4,7 @@ import {
 } from './constants.js';
 import runner from './modules/runner.js';
 import floor from './modules/floor.js';
-
+import { getTimeStamp } from './utils.js';
 import {
     getImageSprite,
     loadImageSprite
@@ -64,6 +64,7 @@ class app {
         this.container = container;
         this.fps = getFPS();
         this.version = "1.0.0";
+        this.time = 0;
         this.init();
     }
 
@@ -90,9 +91,14 @@ class app {
     }
 
     update() {
+
+        const now = getTimeStamp();
+        let deltaTime = now - (this.time || now);
+
+        this.time = now;
         this.clearCanvas();
-        this.runner.update();
-        this.floor.update();
+        this.runner.update(deltaTime);
+        this.floor.update(deltaTime);
 
     }
 
@@ -137,7 +143,7 @@ class app {
     onKeyDown(e) {
         //Space Bar (32)
         if (e.keyCode == 32) {
-            console.log("salta");
+            //console.log("salta");
             this.runner.startJump();
         }
     }

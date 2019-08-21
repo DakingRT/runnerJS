@@ -61,7 +61,8 @@ export default class runner {
         this.currentFrame = 0;
         this.msPerFrame = runner.status["RUNNING"].msPerFrame;
         this.currentAnimFrames = runner.status["RUNNING"].frames;
-
+        this.timer = 0;
+        this.time = 0;
         //Control Jump
         this.jumping = false;
         this.jumpVelocity = 0;
@@ -76,24 +77,38 @@ export default class runner {
         /*this.groundYPos = CANVAS_HEIGHT - this.config.HEIGHT - RUNNER_BOTTOM_PAD;*/
         this.yPos = this.groundYPos;
         this.draw(0, 0);
-        this.update(this.status);
+        this.update(0,this.status);
     }
 
-    update(status) {
+    update(deltaTime, status) {
+        this.timer += deltaTime;
+
         // Update the status.
         if (status) {
-            console.log(status);
-            this.status = status;
-            this.currentFrame = 0;
-            this.msPerFrame = runner.status[status].msPerFrame;
-            this.currentAnimFrames = runner.status[status].frames;
+            this.updateStatus(status);
         }
 
         if (this.jumping) {
             this.updateJump();
         }
+
+        // Update the frame position.
+        if (this.timer >= this.msPerFrame) {
+            this.currentFrame =
+            this.currentFrame === this.currentAnimFrames.length - 1 ? 0 : this.currentFrame + 1;
+            this.timer = 0;
+        }
+        //console.log("currentFrame: "+ this.currentFrame);
         this.draw(this.currentAnimFrames[this.currentFrame], 0);
 
+    }
+
+    updateStatus(status) {
+        this.status = status;
+        this.currentFrame = 0;
+        this.timer = 0;
+        this.msPerFrame = runner.status[status].msPerFrame;
+        this.currentAnimFrames = runner.status[status].frames;
     }
 
     /**
@@ -102,7 +117,7 @@ export default class runner {
      */
     startJump() {
         if (!this.jumping) {
-            this.update("JUMPING");
+            this.update(0, "JUMPING");
             // Tweak the jump velocity based on the speed.
             this.jumping = true;
             this.jumpVelocity = this.config.JUMP_HEIGHT;
@@ -111,17 +126,22 @@ export default class runner {
 
     updateJump() {
         if (this.jumping) {
-            console.log("JumpVelocity:" + this.jumpVelocity + "Ypos:" + this.yPos);
+            //console.log("JumpVelocity:" + this.jumpVelocity + "Ypos:" + this.yPos);
             this.jumpVelocity -= this.config.GRAVITY;
             this.yPos -= this.jumpVelocity;
         }
 
         if (this.yPos >= this.groundYPos ) {
-            this.jumping = 0;
-            this.yPos = this.groundYPos;
-            this.jumpVelocity = 0;
+            this.endJump();
         }
 
+    }
+
+    endJump() {
+        this.jumping = 0;
+        this.yPos = this.groundYPos;
+        this.jumpVelocity = 0;
+        this.updateStatus("RUNNING");
     }
 
     /**

@@ -77,7 +77,7 @@ export default class runner {
         /*this.groundYPos = CANVAS_HEIGHT - this.config.HEIGHT - RUNNER_BOTTOM_PAD;*/
         this.yPos = this.groundYPos;
         this.draw(0, 0);
-        this.update(0,this.status);
+        this.update(0, this.status);
     }
 
     update(deltaTime, status) {
@@ -95,7 +95,7 @@ export default class runner {
         // Update the frame position.
         if (this.timer >= this.msPerFrame) {
             this.currentFrame =
-            this.currentFrame === this.currentAnimFrames.length - 1 ? 0 : this.currentFrame + 1;
+                this.currentFrame === this.currentAnimFrames.length - 1 ? 0 : this.currentFrame + 1;
             this.timer = 0;
         }
         //console.log("currentFrame: "+ this.currentFrame);
@@ -131,7 +131,7 @@ export default class runner {
             this.yPos -= this.jumpVelocity;
         }
 
-        if (this.yPos >= this.groundYPos ) {
+        if (this.yPos >= this.groundYPos) {
             this.endJump();
         }
 

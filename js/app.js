@@ -3,8 +3,10 @@ import {
     CANVAS_HEIGHT
 } from './constants.js';
 import runner from './modules/runner.js';
-import floor from './modules/floor.js';
-import { getTimeStamp } from './utils.js';
+import horizon from './modules/horizon.js';
+import {
+    getTimeStamp
+} from './utils.js';
 import {
     getImageSprite,
     loadImageSprite
@@ -52,6 +54,10 @@ class app {
         }
     };
 
+    static config = {
+        SPEED: 6
+    };
+
     constructor(container) {
         this.dimensions = {
             width: CANVAS_WIDTH,
@@ -65,14 +71,13 @@ class app {
         this.fps = getFPS();
         this.version = "1.0.0";
         this.time = 0;
+        this.currentSpeed = app.config.SPEED;
         this.init();
     }
 
     async init() {
         //We wait for a promise :)
         await loadImageSprite();
-        //this.spriteDef = Runner.spriteDefinition;
-
         //Canvas definition
         this.canvas = this.createCanvas(
             this.container,
@@ -84,8 +89,9 @@ class app {
         this.canvasCtx.fillStyle = '#f7f7f7';
         this.canvasCtx.fill();
         this.startListening();
+        this.setSpeed();
         this.runner = new runner(this.canvas, app.spriteDefinition.TREX);
-        this.floor = new floor(this.canvas, app.spriteDefinition.FLOOR);
+        this.horizon = new horizon(this.canvas, app.spriteDefinition);
 
         this.loopUpdate();
     }
@@ -98,7 +104,7 @@ class app {
         this.time = now;
         this.clearCanvas();
         this.runner.update(deltaTime);
-        this.floor.update(deltaTime);
+        this.horizon.update(deltaTime, this.currentSpeed);
 
     }
 
@@ -146,6 +152,14 @@ class app {
             //console.log("salta");
             this.runner.startJump();
         }
+    }
+
+    /**
+     * Sets the game speed. Adjust the speed accordingly if on a smaller screen.
+     * @param {number} speed
+     */
+    setSpeed(speed) {
+        this.currentSpeed = speed || this.currentSpeed;
     }
 
 }
